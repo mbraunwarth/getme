@@ -1,7 +1,10 @@
 package main
 
-import "strings"
+import (
+	"strings"
+)
 
+// The TagType type alias represents an enumeration of a comment tags type.
 type TagType int
 
 const (
@@ -27,6 +30,8 @@ func (tt TagType) String() string {
 	}
 }
 
+// typeFromName returns the TagType given its upper case string representation.
+// E.g. the given the string `TODO`, the function returns the `Todo` TagType.
 func typeFromName(name string) TagType {
 	switch name {
 	case "TODO":
@@ -42,6 +47,7 @@ func typeFromName(name string) TagType {
 	}
 }
 
+// The Tag struct representing a tag.
 type Tag struct {
 	FileName string
 	TType    TagType
@@ -50,7 +56,8 @@ type Tag struct {
 	Column   int
 }
 
-// TODO comment
+// toTag separates the given line in a tag type and its body and returns a Tag struct
+// based on that and the given file name and line number.
 func toTag(fname, line string, lineNumber int) Tag {
 	// cut off line up to start of comment, leaving just the comment body
 	ss := strings.SplitAfter(line, "//")
