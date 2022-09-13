@@ -44,6 +44,8 @@ func readTagsFromFile(fname string, rd io.Reader) []Tag {
 		// skim l for comments
 		line := sc.Text()
 		lineNumber = lineNumber + 1
+		// TODO #1 swap strings.Contains for regexp for better edge case handling
+		//         such as a `//` in string literals (see bug #1)
 		if strings.Contains(line, "//") {
 			// create tag from comment and append to tag list
 			t := toTag(fname, line, lineNumber)
