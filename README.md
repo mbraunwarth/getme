@@ -1,6 +1,6 @@
 # Greb
 
-CLI utility to greb todos and fixmes in your code base.
+CLI utility to greb todos, fixmes etc. in your code base.
 
 ## Usage
 
