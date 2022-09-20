@@ -12,7 +12,9 @@ const (
 	Fixme
 	Bug
 	Xxx
+
 	Undefined
+	TagsEnumSize
 )
 
 func (tt TagType) String() string {
