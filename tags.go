@@ -67,11 +67,6 @@ func toTag(fname, line string, lineNumber int) Tag {
 	col := len(ss[0]) + 1
 	comment := strings.TrimSpace(ss[1])
 
-	// BUG #1 hitting a line with a `//` followed by nothing or not enough words,
-	//	   i.e. at least 2 words separated by a white space, the program panics
-	//     with `index out of bounds` as the splitted slice is expected to have
-	//     at least two entries
-
 	// separate the tag name from the tags body: `TAGNAME body` -> `TAGNAME`, `body`
 	tagPartsRaw := strings.SplitN(comment, " ", 2)
 	// parse tag type from tag name
