@@ -64,7 +64,7 @@ type Tag struct {
 // based on that and the given file name and line number.
 func toTag(fname, line string, lineNumber int) Tag {
 	// cut off line up to start of comment, leaving just the comment body
-	ss := strings.SplitAfter(line, "//")
+	ss := strings.SplitAfterN(line, "//", 2)
 	// length of cut off part used as column parameter
 	col := len(ss[0]) + 1
 	comment := strings.TrimSpace(ss[1])
@@ -73,11 +73,18 @@ func toTag(fname, line string, lineNumber int) Tag {
 	tagPartsRaw := strings.SplitN(comment, " ", 2)
 	// parse tag type from tag name
 	ttype := typeFromName(tagPartsRaw[0])
-	body := tagPartsRaw[1]
+
+	// in case of empty body (i.e. comment only consists of a tag name), body referres
+	// to an empty string
+	var body string
+	if len(tagPartsRaw) > 1 {
+		body = tagPartsRaw[1]
+	}
 
 	return Tag{fname, ttype, body, lineNumber, col}
 }
 
+// TODO
 // compiledTagRegexp generates a regular expression that matches a comment followed
 // by a comment tag in upper case and some more input and compiles it.
 func compiledTagRegexp() *regexp.Regexp {
