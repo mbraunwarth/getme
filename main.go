@@ -6,7 +6,6 @@ import (
 	"io"
 	"log"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -46,16 +45,9 @@ func readTagsFromFile(fname string, rd io.Reader) []Tag {
 		line := sc.Text()
 		lineNumber = lineNumber + 1
 
-		// TODO #2 compile regular expression with list of supported tags
-		//      this saves performance and space as the expression is only compiled
-		//		once and all 'Undefined' comments (comments without comment tags)
-		//		are not matched
-		match, err := regexp.MatchString(`^[\s\t]*//.*`, line)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if match {
+		p := compiledTagRegexp()
+		// match the line against generated regexp
+		if p.MatchString(line) {
 			// create tag from comment and append to tag list
 			t := toTag(fname, line, lineNumber)
 			tags = append(tags, t)
