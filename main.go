@@ -6,11 +6,11 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
 	"strings"
 )
 
 // TODO Add folder support (greb -> run greb in current working directory) with dir recursion
-// TODO Add specified folder support (greb path/to/folder) with dir recursion
 // TODO Add recursion flag (greb -R ... / greb --no-recursion ...) to turn off explicit folder recursion
 
 func main() {
@@ -20,24 +20,66 @@ func main() {
 		log.Fatal("exactly one file name required")
 	}
 
-	log.Println(args)
+	fileNames := getFileNames(args)
 
-	for _, fname := range args {
-		// open file(s) for reading
+	for _, fname := range fileNames {
+		// open file for reading
 		f, err := os.Open(fname)
 		if err != nil {
-			log.Fatal(err.Error())
+			log.Fatal(err)
 		}
 		defer f.Close()
 
 		// process file
 		tags := readTagsFromFile(fname, f)
 
-		// format output and print to stdout
-		output := formatOutput(tags)
-
-		fmt.Println(output)
+		// format output and print to stdout only if any tags are present
+		if len(tags) != 0 {
+			output := formatOutput(tags)
+			fmt.Println(output)
+		}
 	}
+}
+
+// getFileNames reads the given arguments and returns a list of files names from which
+// tags need to be grebbed.
+func getFileNames(args []string) []string {
+	fileNames := make([]string, 0)
+
+	for _, arg := range args {
+		// get fs.FileInfo object to check if the file is a directory
+		info, err := os.Stat(arg)
+		if err != nil {
+			log.Fatal("X", err)
+		}
+
+		// carry over full path name relative from cwd
+		parent := arg
+		if info.IsDir() {
+			// if current arg is a directory handle each subsequent file
+			es, err := os.ReadDir(arg)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			args := make([]string, 0)
+			for _, e := range es {
+				// need to join relative file path because fs.DirEntry.Name() only
+				// cares about the base name of a file
+				args = append(args, filepath.Join(parent, e.Name()))
+			}
+
+			// opt for a depth first strategy
+			fileNames = append(fileNames, getFileNames(args)...)
+
+			continue
+		}
+
+		// if the current file is not a directory, just append to list of file names
+		fileNames = append(fileNames, arg)
+	}
+
+	return fileNames
 }
 
 // readTagsFromFile scans through the given reader line by line and filters out
