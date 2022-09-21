@@ -10,14 +10,16 @@ import (
 	"strings"
 )
 
-// TODO Add folder support (greb -> run greb in current working directory) with dir recursion
 // TODO Add recursion flag (greb -R ... / greb --no-recursion ...) to turn off explicit folder recursion
+// TODO Add help/usage information
+// TODO Time benchmark each function separately
 
 func main() {
 	// get file name(s) from command line argument
 	args := os.Args[1:]
-	if len(args) < 1 {
-		log.Fatal("exactly one file name required")
+	// no args -> run greb in current working directory (i.e. `greb .`)
+	if len(args) == 0 {
+		args = []string{"."}
 	}
 
 	fileNames := getFileNames(args)
