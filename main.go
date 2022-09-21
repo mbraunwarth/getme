@@ -9,28 +9,35 @@ import (
 	"strings"
 )
 
+// TODO Add folder support (greb -> run greb in current working directory) with dir recursion
+// TODO Add specified folder support (greb path/to/folder) with dir recursion
+// TODO Add recursion flag (greb -R ... / greb --no-recursion ...) to turn off explicit folder recursion
+
 func main() {
-	// get file name from command line argument
+	// get file name(s) from command line argument
 	args := os.Args[1:]
 	if len(args) < 1 {
 		log.Fatal("exactly one file name required")
 	}
 
-	// open file for reading
-	fname := args[0]
-	f, err := os.Open(fname)
-	if err != nil {
-		log.Fatal(err.Error())
+	log.Println(args)
+
+	for _, fname := range args {
+		// open file(s) for reading
+		f, err := os.Open(fname)
+		if err != nil {
+			log.Fatal(err.Error())
+		}
+		defer f.Close()
+
+		// process file
+		tags := readTagsFromFile(fname, f)
+
+		// format output and print to stdout
+		output := formatOutput(tags)
+
+		fmt.Println(output)
 	}
-	defer f.Close()
-
-	// process file
-	tags := readTagsFromFile(fname, f)
-
-	// format output and print to stdout
-	output := formatOutput(tags)
-
-	fmt.Println(output)
 }
 
 // readTagsFromFile scans through the given reader line by line and filters out
