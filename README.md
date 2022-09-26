@@ -1,10 +1,11 @@
-# Greb
+# Getme
 
-CLI utility to greb todos, fixmes etc. in your code base.
+CLI utility to find todos, fixmes etc. in your code base. Those tags will referred to
+as *comment tags*.
 
 ## Usage
 
-Use the `greb` utility on a file or a directory like so.
+Use the `getme` utility on a file or a directory like so.
 
 ```sh
 > cat main.go
@@ -16,20 +17,14 @@ func main() {
     // TODO write hello world
 	fmt.Println("")
 }
-> greb main.go
+> getme main.go
 ./main.go:6:2: TODO -- write hello world
 ```
 
-Without argument, `greb` scans the current directory recursively, directory recursion
-can be suppressed with the `--no-recurse` or `-R` flag.
-
-```sh
-> greb
-> ...
-```
+Without argument, `getme` scans the current directory recursively.
 
 ## Output
 
 The output is parser friendly and can be used easily by editors. File name (relative
-by default), line and column are separated by a colon followed by the [tag type](#tag-type)
+by default), line and column are separated by a colon followed by the 
 and the tags message which are separated by a double dash.
