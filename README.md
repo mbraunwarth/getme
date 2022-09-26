@@ -3,6 +3,11 @@
 CLI utility to find todos, fixmes etc. in your code base. Those tags will referred to
 as *comment tags*.
 
+## Installation
+
+If you have [Go](https://go.dev/dl/) installed, in the downloaded repository run `go build`
+to produce a executable.
+
 ## Usage
 
 Use the `getme` utility on a file or a directory like so.
