@@ -30,6 +30,6 @@ Without argument, `getme` scans the current directory recursively.
 
 ## Output
 
-The output is parser friendly and can be used easily by editors. File name (relative
+The output is parser friendly and can be used by editors plugins. File name (relative
 by default), line and column are separated by a colon followed by the 
 and the tags message which are separated by a double dash.
