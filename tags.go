@@ -62,9 +62,9 @@ type Tag struct {
 
 // toTag separates the given line in a tag type and its body and returns a Tag struct
 // based on that and the given file name and line number.
-func toTag(fname, line string, lineNumber int) Tag {
+func toTag(file File, line string, lineNumber int) Tag {
 	// cut off line up to start of comment, leaving just the comment body
-	ss := strings.SplitAfterN(line, "//", 2)
+	ss := strings.SplitAfterN(line, file.Lang.Comment, 2)
 	// length of cut off part used as column parameter
 	col := len(ss[0]) + 1
 	comment := strings.TrimSpace(ss[1])
@@ -81,10 +81,9 @@ func toTag(fname, line string, lineNumber int) Tag {
 		body = tagPartsRaw[1]
 	}
 
-	return Tag{fname, ttype, body, lineNumber, col}
+	return Tag{file.FullName, ttype, body, lineNumber, col}
 }
 
-// TODO
 // compiledTagRegexp generates a regular expression that matches a comment followed
 // by a comment tag in upper case and some more input and compiles it.
 func compiledTagRegexp() *regexp.Regexp {

@@ -22,18 +22,18 @@ func main() {
 		args = []string{"."}
 	}
 
-	fileNames := getFileNames(args)
+	files := collectTaggedFiles(args)
 
-	for _, fname := range fileNames {
+	for _, file := range files {
 		// open file for reading
-		f, err := os.Open(fname)
+		f, err := os.Open(file.FullName)
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer f.Close()
 
 		// process file
-		tags := readTagsFromFile(fname, f)
+		tags := readTagsFromFile(file, f)
 
 		// format output and print to stdout only if any tags are present
 		if len(tags) != 0 {
@@ -43,10 +43,10 @@ func main() {
 	}
 }
 
-// getFileNames reads the given arguments and returns a list of files names from which
+// collectTaggedFiles reads the list of given file names and returns a list of files from which
 // tags need to be grebbed.
-func getFileNames(args []string) []string {
-	fileNames := make([]string, 0)
+func collectTaggedFiles(args []string) []File {
+	files := make([]File, 0)
 
 	for _, arg := range args {
 		// get fs.FileInfo object to check if the file is a directory
@@ -72,22 +72,29 @@ func getFileNames(args []string) []string {
 			}
 
 			// opt for a depth first strategy
-			fileNames = append(fileNames, getFileNames(args)...)
+			files = append(files, collectTaggedFiles(args)...)
 
 			continue
 		}
 
 		// if the current file is not a directory, just append to list of file names
-		fileNames = append(fileNames, arg)
+		ext := Extension(filepath.Ext(arg))
+		files = append(files, File{
+			arg,
+			filepath.Base(arg),
+			filepath.Dir(arg),
+			ext,
+			langs[ext],
+		})
 	}
 
-	return fileNames
+	return files
 }
 
 // readTagsFromFile scans through the given reader line by line and filters out
 // the lines with comment tags. The function returns a slice of tags contained in
 // the scanned file.
-func readTagsFromFile(fname string, rd io.Reader) []Tag {
+func readTagsFromFile(file File, rd io.Reader) []Tag {
 	tags := make([]Tag, 0)
 	lineNumber := 0
 	sc := bufio.NewScanner(rd)
@@ -100,7 +107,7 @@ func readTagsFromFile(fname string, rd io.Reader) []Tag {
 		// match the line against generated regexp
 		if p.MatchString(line) {
 			// create tag from comment and append to tag list
-			t := toTag(fname, line, lineNumber)
+			t := toTag(file, line, lineNumber)
 			tags = append(tags, t)
 		}
 	}
