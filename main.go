@@ -103,7 +103,7 @@ func readTagsFromFile(file File, rd io.Reader) []Tag {
 		line := sc.Text()
 		lineNumber = lineNumber + 1
 
-		p := compiledTagRegexp()
+		p := compiledTagRegexp(file.Ext)
 		// match the line against generated regexp
 		if p.MatchString(line) {
 			// create tag from comment and append to tag list

@@ -16,14 +16,14 @@ type File struct {
 }
 
 var langs = map[Extension]Language{
-	Extension("go"):   Language{"Golang", "//"},
-	Extension("rs"):   Language{"Rust", "//"},
-	Extension("java"): Language{"Java", "//"},
-	Extension("lua"):  Language{"Lua", "--"},
-	Extension("elm"):  Language{"Elm", "--"},
-	Extension("hs"):   Language{"Haskell", "--"},
-	Extension("py"):   Language{"Python", "#"},
-	Extension("rb"):   Language{"Ruby", "#"},
-	Extension("ex"):   Language{"Elixir", "#"},
-	Extension("exs"):  Language{"Elixir Script", "#"},
+	Extension(".go"):   Language{"Golang", "//"},
+	Extension(".rs"):   Language{"Rust", "//"},
+	Extension(".java"): Language{"Java", "//"},
+	Extension(".lua"):  Language{"Lua", "--"},
+	Extension(".elm"):  Language{"Elm", "--"},
+	Extension(".hs"):   Language{"Haskell", "--"},
+	Extension(".py"):   Language{"Python", "#"},
+	Extension(".rb"):   Language{"Ruby", "#"},
+	Extension(".ex"):   Language{"Elixir", "#"},
+	Extension(".exs"):  Language{"Elixir Script", "#"},
 }

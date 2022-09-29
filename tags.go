@@ -86,8 +86,8 @@ func toTag(file File, line string, lineNumber int) Tag {
 
 // compiledTagRegexp generates a regular expression that matches a comment followed
 // by a comment tag in upper case and some more input and compiles it.
-func compiledTagRegexp() *regexp.Regexp {
-	commentStart := "//"
+func compiledTagRegexp(ext Extension) *regexp.Regexp {
+	commentStart := langs[ext].Comment
 	tagList := "TODO|FIXME|BUG|XXX"
 	p := fmt.Sprintf(`^[\t\s]*%s\s*(%s).*$`, commentStart, tagList)
 	exp := regexp.MustCompile(p)

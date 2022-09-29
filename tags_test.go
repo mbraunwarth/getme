@@ -4,6 +4,8 @@ import (
 	"testing"
 )
 
+// TODO revise test cases for current version of program
+
 // ignoring 'Undefined' tag
 var stringTagMap = map[string]TagType{
 	"TODO":  Todo,
