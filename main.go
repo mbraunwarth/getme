@@ -98,12 +98,12 @@ func readTagsFromFile(file File, rd io.Reader) []Tag {
 	tags := make([]Tag, 0)
 	lineNumber := 0
 	sc := bufio.NewScanner(rd)
+	p := compiledTagRegexp(file.Ext)
 	for sc.Scan() {
 		// skim l for comments
 		line := sc.Text()
 		lineNumber = lineNumber + 1
 
-		p := compiledTagRegexp(file.Ext)
 		// match the line against generated regexp
 		if p.MatchString(line) {
 			// create tag from comment and append to tag list
